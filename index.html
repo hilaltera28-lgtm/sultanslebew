@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Swipe Foto</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      background:black;
+      overflow:hidden;
+      font-family:sans-serif;
+    }
+
+    .slider{
+      width:100vw;
+      height:100vh;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .slides{
+      display:flex;
+      width:300vw;
+      height:100%;
+      transition:transform 0.3s ease;
+    }
+
+    .slides img{
+      width:100vw;
+      height:100vh;
+      object-fit:cover;
+      flex-shrink:0;
+      user-select:none;
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider">
+    <div class="slides" id="slides">
+      <img src="1.png" draggable="false">
+      <img src="2.png" draggable="false">
+      <img src="3.png" draggable="false">
+    </div>
+  </div>
+
+  <audio id="bgm" loop>
+  <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const slides = document.getElementById("slides");
+  const bgm = document.getElementById("bgm");
+
+  let current = 0;
+
+  let startX = 0;
+  let endX = 0;
+
+  let musicStarted = false;
+
+  function updateSlide(){
+    slides.style.transform = `translateX(-${current * 100}vw)`;
+  }
+
+  document.addEventListener("touchstart", (e)=>{
+
+    // mulai musik saat pertama disentuh
+    if(!musicStarted){
+      bgm.play();
+      musicStarted = true;
+    }
+
+    startX = e.touches[0].clientX;
+  });
+
+  document.addEventListener("touchend", (e)=>{
+    endX = e.changedTouches[0].clientX;
+
+    let diff = startX - endX;
+
+    // swipe kiri
+    if(diff > 50){
+      if(current < 2){
+        current++;
+      }
+    }
+
+    // swipe kanan
+    if(diff < -50){
+      if(current > 0){
+        current--;
+      }
+    }
+
+    updateSlide();
+  });
+</script>
+
+</body>
+</html>
